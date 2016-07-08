@@ -9,3 +9,4 @@ test change this file commmit and push (1)
 ***test change this file commmit and push (7)
 ***test unziped file commmit and push
 ***test change this file commmit and push (8)
+***test change clone command from git Camel component
