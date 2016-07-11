@@ -1,0 +1,72 @@
+<blueprint default-activation="eager"
+	xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:jaxws="http://cxf.apache.org/blueprint/jaxws" 
+	xmlns:jaxrs="http://cxf.apache.org/blueprint/jaxrs"
+	xmlns:cxf="http://camel.apache.org/schema/blueprint/cxf" 
+	xmlns:cxfi="http://cxf.apache.org/blueprint/core" 
+	xmlns:cm="http://aries.apache.org/blueprint/xmlns/blueprint-cm/v1.1.0"
+	xmlns:jpa="http://aries.apache.org/xmlns/jpa/v1.0.0" 
+	xmlns:tx="http://aries.apache.org/xmlns/transactions/v1.0.0"
+	xsi:schemaLocation="http://cxf.apache.org/blueprint/jaxrs 
+ http://cxf.apache.org/schemas/blueprint/jaxrs.xsd
+ http://cxf.apache.org/blueprint/core 
+ http://cxf.apache.org/schemas/blueprint/core.xsd">
+
+	<!-- BEANS MANAGEMENT -->
+
+	<bean id="processor" class="com.accenture.cpaas.enabler.dcm.fe.processor.rest.RequestProcessor">
+		<property name="validator" ref="rest-device-validator" />
+		<property name="service" value="DCM-CORRADODUEMASTERAIP" />
+		<property name="multiTenancy" value="false" />
+	</bean>
+	
+	<bean id="response" class="com.accenture.cpaas.enabler.dcm.fe.processor.response.ResponseProcessor"/>
+
+	<!-- BEANS MANAGEMENT -->
+
+	<!-- REFERENCE -->
+	
+	<reference id="rest-device-validator" interface="com.accenture.cpaas.enabler.dcm.fe.service.rest.DeviceValidator" />
+	
+	<!-- REFERENCE -->
+	
+
+	<!-- CXF -->
+	
+	<cxfi:bus>
+        <cxfi:features>
+            <cxfi:logging/>
+        </cxfi:features>
+    </cxfi:bus>
+	
+	<cxf:rsServer id="rs-server" address="/corradodue_masteraip" loggingFeatureEnabled="true" serviceClass="com.accenture.cpaas.enabler.dcm.corradodue.masteraip.fe.rs.DCMRs">
+		<cxf:providers>
+			<bean class="com.accenture.cpaas.core.util.provider.JsonProvider" factory-method="getProvider" />
+		</cxf:providers>
+	</cxf:rsServer>
+
+	<!-- CXF -->
+	
+
+	<!-- CAMEL ROUTES -->
+
+	<camelContext xmlns="http://camel.apache.org/schema/blueprint">
+		<dataFormats>
+			<json id="jack" library="Jackson" unmarshalTypeName="com.accenture.cpaas.enabler.dcm.corradodue.masteraip.fe.data.CorradodueMasteraip" />
+		</dataFormats>
+		<route id="corradodue_masteraip-fe">
+			<from uri="cxfrs:bean:rs-server?bindingStyle=SimpleConsumer" />	
+			<setHeader headerName="service-name">
+				<constant>corradodue_masteraip</constant>        
+			</setHeader>		
+			<process ref="processor" />
+			<marshal ref="jack" />
+			<inOnly uri="amq:queue:dcm.corradodue.masteraip.queue" />
+			<process ref="response" />
+		</route>
+	</camelContext>
+	
+	<!-- CAMEL ROUTES -->
+
+</blueprint>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<features name="com.accenture.cpaas.enabler.corradodue.masteraip" xmlns="http://karaf.apache.org/xmlns/features/v1.0.0">
+ 	<feature name="dcm-corradodue-masteraip-fe" version="3.0.0">
+		<bundle>mvn:com.accenture.cpaas.aip.enabler/dcm-corradodue-masteraip-fe/3.0.0-SNAPSHOT</bundle>
+    </feature>
+    <feature name="dcm-corradodue-masteraip-be" version="3.0.0">
+		<bundle>mvn:com.accenture.cpaas.aip.enabler/dcm-corradodue-masteraip-be/3.0.0-SNAPSHOT</bundle>
+    </feature>    
+</features>
