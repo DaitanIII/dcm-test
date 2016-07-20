@@ -1,1 +1,0 @@
-DROP TABLE properties_db_table_name;
