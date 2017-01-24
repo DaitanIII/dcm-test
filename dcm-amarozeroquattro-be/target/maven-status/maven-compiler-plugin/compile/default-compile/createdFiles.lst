@@ -1,0 +1,8 @@
+com/accenture/cpaas/enabler/dcm/amarozeroquattro/masteraip/be/access/DcmCqlAccessImpl.class
+com/accenture/cpaas/enabler/dcm/amarozeroquattro/masteraip/be/processor/SerializeRequestProcessor.class
+com/accenture/cpaas/enabler/dcm/amarozeroquattro/masteraip/be/util/EntityBean.class
+com/accenture/cpaas/enabler/dcm/amarozeroquattro/masteraip/be/access/entity/AmarozeroquattroMasteraip.class
+com/accenture/cpaas/enabler/dcm/amarozeroquattro/masteraip/be/processor/DCMProcessor.class
+com/accenture/cpaas/enabler/dcm/amarozeroquattro/masteraip/be/data/AmarozeroquattroMasteraip.class
+com/accenture/cpaas/enabler/dcm/amarozeroquattro/masteraip/be/data/DCMRequest.class
+com/accenture/cpaas/enabler/dcm/amarozeroquattro/masteraip/be/processor/ContentConverterProcessor.class
