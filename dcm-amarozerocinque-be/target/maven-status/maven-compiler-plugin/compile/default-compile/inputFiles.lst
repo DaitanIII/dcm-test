@@ -1,0 +1,8 @@
+/data/script-generator/DCM_PROJECTS/dcm-amarozerocinque-masteraip-be/src/main/java/com/accenture/cpaas/enabler/dcm/amarozerocinque/masteraip/be/processor/ContentConverterProcessor.java
+/data/script-generator/DCM_PROJECTS/dcm-amarozerocinque-masteraip-be/src/main/java/com/accenture/cpaas/enabler/dcm/amarozerocinque/masteraip/be/data/AmarozerocinqueMasteraip.java
+/data/script-generator/DCM_PROJECTS/dcm-amarozerocinque-masteraip-be/src/main/java/com/accenture/cpaas/enabler/dcm/amarozerocinque/masteraip/be/access/entity/AmarozerocinqueMasteraip.java
+/data/script-generator/DCM_PROJECTS/dcm-amarozerocinque-masteraip-be/src/main/java/com/accenture/cpaas/enabler/dcm/amarozerocinque/masteraip/be/processor/DCMProcessor.java
+/data/script-generator/DCM_PROJECTS/dcm-amarozerocinque-masteraip-be/src/main/java/com/accenture/cpaas/enabler/dcm/amarozerocinque/masteraip/be/processor/SerializeRequestProcessor.java
+/data/script-generator/DCM_PROJECTS/dcm-amarozerocinque-masteraip-be/src/main/java/com/accenture/cpaas/enabler/dcm/amarozerocinque/masteraip/be/access/DcmCqlAccessImpl.java
+/data/script-generator/DCM_PROJECTS/dcm-amarozerocinque-masteraip-be/src/main/java/com/accenture/cpaas/enabler/dcm/amarozerocinque/masteraip/be/util/EntityBean.java
+/data/script-generator/DCM_PROJECTS/dcm-amarozerocinque-masteraip-be/src/main/java/com/accenture/cpaas/enabler/dcm/amarozerocinque/masteraip/be/data/DCMRequest.java
