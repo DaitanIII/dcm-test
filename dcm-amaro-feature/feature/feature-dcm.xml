@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<features name="com.accenture.cpaas.enabler.amaro.masteraip" xmlns="http://karaf.apache.org/xmlns/features/v1.0.0">
+ 	<feature name="dcm-amaro-masteraip-fe" version="3.0.0">
+		<bundle>mvn:com.accenture.cpaas.aip.enabler/dcm-amaro-masteraip-fe/1.0.0</bundle>
+    </feature>
+    <feature name="dcm-amaro-masteraip-be" version="3.0.0">
+		<bundle>mvn:com.accenture.cpaas.aip.enabler/dcm-amaro-masteraip-be/1.0.0</bundle>
+    </feature>    
+</features>
