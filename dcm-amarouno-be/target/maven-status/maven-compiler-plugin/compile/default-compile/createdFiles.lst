@@ -1,0 +1,8 @@
+com/accenture/cpaas/enabler/dcm/amarouno/masteraip/be/processor/ContentConverterProcessor.class
+com/accenture/cpaas/enabler/dcm/amarouno/masteraip/be/processor/DCMProcessor.class
+com/accenture/cpaas/enabler/dcm/amarouno/masteraip/be/data/DCMRequest.class
+com/accenture/cpaas/enabler/dcm/amarouno/masteraip/be/access/entity/AmarounoMasteraip.class
+com/accenture/cpaas/enabler/dcm/amarouno/masteraip/be/util/EntityBean.class
+com/accenture/cpaas/enabler/dcm/amarouno/masteraip/be/data/AmarounoMasteraip.class
+com/accenture/cpaas/enabler/dcm/amarouno/masteraip/be/processor/SerializeRequestProcessor.class
+com/accenture/cpaas/enabler/dcm/amarouno/masteraip/be/access/DcmCqlAccessImpl.class
