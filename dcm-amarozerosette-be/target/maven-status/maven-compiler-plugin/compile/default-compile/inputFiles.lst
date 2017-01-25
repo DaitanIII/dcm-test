@@ -1,0 +1,8 @@
+/data/script-generator/DCM_PROJECTS/dcm-amarozerosette-masteraip-be/src/main/java/com/accenture/cpaas/enabler/dcm/amarozerosette/masteraip/be/access/DcmCqlAccessImpl.java
+/data/script-generator/DCM_PROJECTS/dcm-amarozerosette-masteraip-be/src/main/java/com/accenture/cpaas/enabler/dcm/amarozerosette/masteraip/be/data/AmarozerosetteMasteraip.java
+/data/script-generator/DCM_PROJECTS/dcm-amarozerosette-masteraip-be/src/main/java/com/accenture/cpaas/enabler/dcm/amarozerosette/masteraip/be/processor/SerializeRequestProcessor.java
+/data/script-generator/DCM_PROJECTS/dcm-amarozerosette-masteraip-be/src/main/java/com/accenture/cpaas/enabler/dcm/amarozerosette/masteraip/be/data/DCMRequest.java
+/data/script-generator/DCM_PROJECTS/dcm-amarozerosette-masteraip-be/src/main/java/com/accenture/cpaas/enabler/dcm/amarozerosette/masteraip/be/processor/DCMProcessor.java
+/data/script-generator/DCM_PROJECTS/dcm-amarozerosette-masteraip-be/src/main/java/com/accenture/cpaas/enabler/dcm/amarozerosette/masteraip/be/util/EntityBean.java
+/data/script-generator/DCM_PROJECTS/dcm-amarozerosette-masteraip-be/src/main/java/com/accenture/cpaas/enabler/dcm/amarozerosette/masteraip/be/processor/ContentConverterProcessor.java
+/data/script-generator/DCM_PROJECTS/dcm-amarozerosette-masteraip-be/src/main/java/com/accenture/cpaas/enabler/dcm/amarozerosette/masteraip/be/access/entity/AmarozerosetteMasteraip.java
