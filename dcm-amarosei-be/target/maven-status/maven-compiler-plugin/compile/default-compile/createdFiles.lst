@@ -1,0 +1,8 @@
+com/accenture/cpaas/enabler/dcm/amarosei/masteraip/be/access/DcmCqlAccessImpl.class
+com/accenture/cpaas/enabler/dcm/amarosei/masteraip/be/processor/SerializeRequestProcessor.class
+com/accenture/cpaas/enabler/dcm/amarosei/masteraip/be/processor/ContentConverterProcessor.class
+com/accenture/cpaas/enabler/dcm/amarosei/masteraip/be/access/entity/AmaroseiMasteraip.class
+com/accenture/cpaas/enabler/dcm/amarosei/masteraip/be/util/EntityBean.class
+com/accenture/cpaas/enabler/dcm/amarosei/masteraip/be/processor/DCMProcessor.class
+com/accenture/cpaas/enabler/dcm/amarosei/masteraip/be/data/AmaroseiMasteraip.class
+com/accenture/cpaas/enabler/dcm/amarosei/masteraip/be/data/DCMRequest.class

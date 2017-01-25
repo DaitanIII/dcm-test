@@ -1,0 +1,161 @@
+<blueprint default-activation="eager"
+		   xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0"
+		   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		   xmlns:jaxws="http://cxf.apache.org/blueprint/jaxws"
+		   xmlns:jaxrs="http://cxf.apache.org/blueprint/jaxrs"
+		   xmlns:cxf="http://cxf.apache.org/blueprint/core"
+		   xmlns:cm="http://aries.apache.org/blueprint/xmlns/blueprint-cm/v1.1.0"
+		   xmlns:jpa="http://aries.apache.org/xmlns/jpa/v1.0.0"
+		   xmlns:tx="http://aries.apache.org/xmlns/transactions/v1.0.0"
+		   xmlns:prop="http://camel.apache.org/schema/placeholder"
+		   xsi:schemaLocation="http://cxf.apache.org/blueprint/jaxrs
+							   http://cxf.apache.org/schemas/blueprint/jaxrs.xsd
+ 							   http://cxf.apache.org/blueprint/core
+ 							   http://cxf.apache.org/schemas/blueprint/core.xsd">
+
+	<!-- PROPERTIES MANAGEMENT -->
+
+	<cm:property-placeholder id="be" persistent-id="com.accenture.cpaas.enabler.dcm.amarosei.masteraip.be" placeholder-prefix="${" placeholder-suffix="}" update-strategy="reload" />
+	<cm:property-placeholder id="common" persistent-id="com.accenture.cpaas.enabler.dcm.common" placeholder-prefix="$[" placeholder-suffix="]" update-strategy="reload" />
+	<cm:property-placeholder id="aws-client" persistent-id="com.accenture.cpaas.clients.aws" placeholder-prefix="$[[" placeholder-suffix="]]" update-strategy="reload" />
+	<cm:property-placeholder id="datastax-client" persistent-id="com.accenture.cpaas.clients.datastax" placeholder-prefix="£{" placeholder-suffix="}" update-strategy="reload" />
+
+	<!-- PROPERTIES MANAGEMENT -->
+
+	<!-- BEANS MANAGEMENT -->
+
+	<bean id="dcm-cs" class="com.accenture.cpaas.enabler.dcm.amarosei.masteraip.be.access.DcmCqlAccessImpl">
+		<property name="client" ref="cassandra-client" />
+	</bean>
+
+	<bean id="dcm-be-processor" class="com.accenture.cpaas.enabler.dcm.amarosei.masteraip.be.processor.DCMProcessor">
+		<property name="validator" ref="dcm-amarosei_masteraip-validator" />
+		<property name="crsmManager" ref="crsm-manager" />
+	</bean>
+	
+	<bean id="serialize-request-processor" class="com.accenture.cpaas.enabler.dcm.amarosei.masteraip.be.processor.SerializeRequestProcessor" />
+
+	<bean id="dcm-amarosei_masteraip-validator"
+		class="com.accenture.cpaas.enabler.dcm.common.validator.RequestValidator">
+		<argument ref="blueprintBundleContext" />
+	</bean>
+	
+	<bean id="cassandra-client" class="com.accenture.cpaas.enabler.dcm.cassandra.utility.client.CassandraClient" scope="singleton">
+		<argument value="£{cassandra.node}" />
+		<argument value="£{cassandra.keyspace}" />
+		<argument value="£{cassandra.username}" />
+		<argument value="£{cassandra.password}" />
+	</bean>
+	
+	<bean id="strategy" class="com.accenture.cpaas.enabler.dcm.common.aggregator.ListAggregationStrategy" />
+
+	<bean id="re-processor" class="com.accenture.cpaas.enabler.dcm.common.re.processor.RuleEngineProcessor" />
+	
+	<bean id="json-data-format" class="com.accenture.cpaas.core.util.formatter.JSONDataFormat" />
+	
+	<!-- BEANS MANAGEMENT -->
+
+	<!-- SERVICES REFERENCE -->
+
+	<reference id="crsm-manager" interface="com.accenture.cpaas.enabler.dcm.common.crsm.CrsmManager" />
+
+	<!-- SERVICES REFERENCE -->
+
+	<!-- CAMEL ROUTES -->
+
+	<camelContext xmlns="http://camel.apache.org/schema/blueprint">
+		<dataFormats>
+			<json id="req-json" library="Jackson" unmarshalTypeName="com.accenture.cpaas.enabler.dcm.amarosei.masteraip.be.data.AmaroseiMasteraip" />
+			<json id="err-json" library="Jackson" unmarshalTypeName="com.accenture.cpaas.enabler.dcm.common.data.ErrorMessage" />
+		</dataFormats>
+		
+		<route id="amarosei_masteraip-be">
+			<from uri="amq:queue:dcm.amarosei.masteraip.queue?concurrentConsumers={{concurrent.consumer}}&amp;maxConcurrentConsumers={{concurrent.consumer.max}}" />
+			<unmarshal ref="req-json" />
+			<process ref="dcm-be-processor" />
+			<choice>
+				<when>
+					<simple>${in.header.is-not-valid} == 'false'</simple>
+					<wireTap uri="seda:multicast?size={{seda.queue.size}}&amp;concurrentConsumers={{seda.consumers}}&amp;blockWhenFull={{seda.block}}&amp;multipleConsumers=true" />
+					<process ref="serialize-request-processor" />
+					<aggregate strategyRef="strategy" prop:completionSize="{{completion.size}}" prop:completionTimeout="{{completion.timeout}}" parallelProcessing="true">
+						<correlationExpression>
+							<simple>exit</simple>
+						</correlationExpression>
+						<to uri="bean:dcm-cs?method=writeNewSampling" />
+					</aggregate>
+				</when>
+				<otherwise>
+					<marshal ref="err-json" />
+					<inOnly uri="amq:queue:dcm.dead.queue" />
+				</otherwise>
+			</choice>
+		</route>
+
+		<route id="amarosei_masteraip-multicast">
+			<from uri="seda:multicast?size={{seda.queue.size}}&amp;concurrentConsumers={{seda.consumers}}&amp;blockWhenFull={{seda.block}}&amp;multipleConsumers=true" />
+			<multicast stopOnException="false">
+				<to uri="direct:ruleengine" />
+<!-- 				<to uri="direct:sendtotopic" /> -->
+<!-- 				<choice>
+					<when>
+						<simple>${header.stream.enabled} == true</simple>
+						<to uri="direct:kinesis" />
+					</when>
+				</choice> -->
+			</multicast>
+		</route>
+		
+		<route id="amarosei_masteraip-multicast-topic">
+			<from uri="seda:multicast?size={{seda.queue.size}}&amp;concurrentConsumers={{seda.consumers}}&amp;blockWhenFull={{seda.block}}&amp;multipleConsumers=true" />
+			<multicast stopOnException="false">
+				<to uri="direct:sendtotopic" />
+			</multicast>
+		</route>
+
+		<route id="amarosei_masteraip-multicast-stream">
+			<from uri="seda:multicast?size={{seda.queue.size}}&amp;concurrentConsumers={{seda.consumers}}&amp;blockWhenFull={{seda.block}}&amp;multipleConsumers=true" />
+			<multicast stopOnException="false">
+				<choice>
+					<when>
+						<simple>${header.stream.enabled} == true</simple>
+						<to uri="direct:kinesis" />
+					</when>
+				</choice>
+			</multicast>
+		</route>	
+		
+		<route id="amarosei_masteraip-ruleengine">
+			<from uri="direct:ruleengine" />
+			<setHeader headerName="event-type">
+				<constant>amarosei_masteraip</constant>
+			</setHeader>
+			<setHeader headerName="event-type-xml">
+				<constant>true</constant>
+			</setHeader>
+			<process ref="re-processor" />
+			<to uri="cpaas-re://{{re.url.xml}}?timeout={{http.timeout}}" />
+		</route>
+		
+		<route id="amarosei_masteraip-topic" streamCache="true">
+			<from uri="direct:sendtotopic" />
+			<setHeader headerName="deviceid.header">
+            	<simple>${in.body.header.deviceId}</simple>
+        	</setHeader>
+			<marshal ref="req-json" />
+			<log message="message sending to topic cpaas.iot.${in.header.deviceid.header}.amarosei_masteraip ${body}" />
+			<recipientList>
+				<simple>amq:topic:cpaas.iot.${in.header.deviceid.header}.amarosei_masteraip</simple>
+			</recipientList>
+		</route>
+
+		<route id="amarosei_masteraip-kinesis">
+			<from uri="direct:kinesis" />
+			<marshal ref="req-json" />
+			<to uri="aws-kinesis://putRecord?accessKey=RAW({{kinesis.accessKey}})&amp;secretKey=RAW({{kinesis.secretKey}})" />
+		</route>
+	</camelContext>
+
+	<!-- CAMEL ROUTES -->
+
+</blueprint>
